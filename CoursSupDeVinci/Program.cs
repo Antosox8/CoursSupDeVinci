@@ -2,7 +2,7 @@
 
 using CoursSupDeVinci;
 
-String path = @"C:\Users\julie\RiderProjects\CoursSupDeVinci\CoursSupDeVinci\CoursSupDeVinci_C#.csv";
+const String path = @"C:\Users\julie\RiderProjects\CoursSupDeVinci\CoursSupDeVinci\CoursSupDeVinci_C#.csv";
 
 Dictionary<int,Person> persons = new Dictionary<int, Person>(); 
 
@@ -16,6 +16,7 @@ for (int i = 1; i < lignes.Length; i++)
     person.Lastname = line.Split(',')[1];
     person.Firstname = line.Split(',')[2];
     person.Birthdate = ConvertToDateTime(line.Split(',')[3]);
+    person.Size = Int32.Parse(line.Split(',')[5]);
     
     List<String> details = line.Split(',')[4].Split(';').ToList();
     
@@ -57,6 +58,43 @@ for (int i = 1; i < lignes.Length; i++)
 
     #endregion
 
+double tailleMoyenne = persons.Average(person => person.Value.Size);
+double tailleMoyenneMetre = Math.Floor(tailleMoyenne) / 100;
+
+Dictionary<int, Person> tallerPersons = persons.Where(person => person.Value.Size > tailleMoyenne)
+    .ToDictionary(person => person.Key, person => person.Value);
+
+Console.WriteLine($"Il y a {tallerPersons.Count.ToString()} personnes qui sont plus grandes que la moyenne " +
+                  $"de la classe qui est de {tailleMoyenneMetre} mètre");
+
+#region boucle affiche toute la classe
+
+// foreach (KeyValuePair<int, Person> person in persons)
+// {
+// Console.WriteLine($"Bonjour {person.Value.Firstname} {person.Value.Lastname},");
+// Console.WriteLine($"tu as {person.Value.getYearsOld().ToString()} ans et tu habites au {person.Value.AdressDetails.Street}" +
+//                   $" {person.Value.AdressDetails.ZipCode.ToString()} {person.Value.AdressDetails.City}.");
+
+// }
+
+#endregion
+
+#region Console.WriteLine Exo 1 qui est plus quand des deux
+
+    // if (person1.getYearsOld() > person2.getYearsOld())
+// {
+//     Console.WriteLine($"{person1.Firstname} {person1.Lastname} est plus agé(e) que {person2.Firstname} {person2.Lastname} de {(person1.getYearsOld() - person2.getYearsOld()).ToString()} an(s)");
+// }
+// else if (person1.getYearsOld() < person2.getYearsOld())
+// {
+//     Console.WriteLine($"{person2.Firstname} {person2.Lastname} est plus agé(e) que {person1.Firstname} {person1.Lastname} de {(person2.getYearsOld() - person1.getYearsOld()).ToString()} an(s)");
+// }
+// else
+// {
+//     Console.WriteLine($"{person1.Firstname} {person1.Lastname} a le même age que {person2.Firstname} {person2.Lastname}");
+// }
+
+    #endregion
 
 DateTime ConvertToDateTime(String date)
 {
@@ -70,24 +108,3 @@ DateTime ConvertToDateTime(String date)
         return DateTime.Now;
     }
 }
-
-foreach (KeyValuePair<int, Person> person in persons)
-{
-    Console.WriteLine($"Bonjour {person.Value.Firstname} {person.Value.Lastname},");
-    Console.WriteLine($"tu as {person.Value.getYearsOld().ToString()} ans et tu habites au {person.Value.AdressDetails.Street}" +
-                      $" {person.Value.AdressDetails.ZipCode.ToString()} {person.Value.AdressDetails.City}.");
-
-}
-
-// if (person1.getYearsOld() > person2.getYearsOld())
-// {
-//     Console.WriteLine($"{person1.Firstname} {person1.Lastname} est plus agé(e) que {person2.Firstname} {person2.Lastname} de {(person1.getYearsOld() - person2.getYearsOld()).ToString()} an(s)");
-// }
-// else if (person1.getYearsOld() < person2.getYearsOld())
-// {
-//     Console.WriteLine($"{person2.Firstname} {person2.Lastname} est plus agé(e) que {person1.Firstname} {person1.Lastname} de {(person2.getYearsOld() - person1.getYearsOld()).ToString()} an(s)");
-// }
-// else
-// {
-//     Console.WriteLine($"{person1.Firstname} {person1.Lastname} a le même age que {person2.Firstname} {person2.Lastname}");
-// }

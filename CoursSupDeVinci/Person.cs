@@ -9,6 +9,8 @@ public class Person
     private DateTime birthdate;
     
     private Detail adressDetails;
+    
+    private int size;
 
     public Detail AdressDetails
     {
@@ -32,6 +34,12 @@ public class Person
     {
         get => birthdate;
         set => birthdate = value;
+    }
+    
+    public int Size
+    {
+        get => size;
+        set => size = value;
     }
 
     public int getYearsOld()
