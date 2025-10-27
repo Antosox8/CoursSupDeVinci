@@ -1,4 +1,6 @@
-﻿public class Person
+﻿using CoursSupDeVinci;
+
+public class Person
 {
     private String firstname;
 
@@ -6,9 +8,9 @@
     
     private DateTime birthdate;
     
-    private List<String> adressDetails;
+    private Detail adressDetails;
 
-    public List<String> AdressDetails
+    public Detail AdressDetails
     {
         get => adressDetails;
         set => adressDetails = value ?? throw new ArgumentNullException(nameof(value));
@@ -44,32 +46,5 @@
         }
         
         return years;
-    }
-
-    public String getStreet()
-    {
-        if (adressDetails[0] != null)
-        {
-            return adressDetails[0];
-        }
-
-        return "Pas de Rue connue";
-    }
-    public String getPostcode()
-    {
-        if (adressDetails[1] != null)
-        {
-            return adressDetails[1];
-        }
-        return "pas de Code Postal connu";
-    }
-    public String getCity()
-    {
-        if (adressDetails[2] != null)
-        {
-            return adressDetails[2];
-        }
-
-        return "Pas de Ville connue";
     }
 }
