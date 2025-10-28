@@ -1,8 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using CoursSupDeVinci;
+using CoursSupDeVinci.Utils;
 
-const String path = @"C:\Users\julie\RiderProjects\CoursSupDeVinci\CoursSupDeVinci\CoursSupDeVinci_C#.csv";
+const String path = @"C:\Users\julie\RiderProjects\CoursSupDeVinci\CoursSupDeVinci\Data\CoursSupDeVinci_C#.csv";
 
 Dictionary<int,Person> persons = new Dictionary<int, Person>(); 
 
@@ -15,7 +16,7 @@ for (int i = 1; i < lignes.Length; i++)
     
     person.Lastname = line.Split(',')[1];
     person.Firstname = line.Split(',')[2];
-    person.Birthdate = ConvertToDateTime(line.Split(',')[3]);
+    person.Birthdate = DateTimeUtils.ConvertToDateTime(line.Split(',')[3]);
     person.Size = Int32.Parse(line.Split(',')[5]);
     
     List<String> details = line.Split(',')[4].Split(';').ToList();
@@ -58,14 +59,16 @@ for (int i = 1; i < lignes.Length; i++)
 
     #endregion
 
-double tailleMoyenne = persons.Average(person => person.Value.Size);
-double tailleMoyenneMetre = Math.Floor(tailleMoyenne) / 100;
-
-Dictionary<int, Person> tallerPersons = persons.Where(person => person.Value.Size > tailleMoyenne)
-    .ToDictionary(person => person.Key, person => person.Value);
-
-Console.WriteLine($"Il y a {tallerPersons.Count.ToString()} personnes qui sont plus grandes que la moyenne " +
-                  $"de la classe qui est de {tailleMoyenneMetre} mètre");
+#region exercice taille et linq
+// double tailleMoyenne = persons.Average(person => person.Value.Size);
+// double tailleMoyenneMetre = Math.Floor(tailleMoyenne) / 100;
+//
+// Dictionary<int, Person> tallerPersons = persons.Where(person => person.Value.Size > tailleMoyenne)
+//     .ToDictionary(person => person.Key, person => person.Value);
+//
+// Console.WriteLine($"Il y a {tallerPersons.Count.ToString()} personnes qui sont plus grandes que la moyenne " +
+//                   $"de la classe qui est de {tailleMoyenneMetre} mètre");
+#endregion
 
 #region boucle affiche toute la classe
 
@@ -96,15 +99,5 @@ Console.WriteLine($"Il y a {tallerPersons.Count.ToString()} personnes qui sont p
 
     #endregion
 
-DateTime ConvertToDateTime(String date)
-{
-    if (DateTime.TryParse(date, out DateTime birthdate))
-    {
-        return  birthdate;
-    }
-    else
-    {
-        Console.WriteLine($"La date de P1 est mal renseignée");
-        return DateTime.Now;
-    }
-}
+DbConnection dbConnection = new DbConnection();
+dbConnection.init();
