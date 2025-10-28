@@ -2,10 +2,44 @@
 
 using CoursSupDeVinci;
 using CoursSupDeVinci.Utils;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 
-const String path = @"C:\Users\julie\RiderProjects\CoursSupDeVinci\CoursSupDeVinci\Data\CoursSupDeVinci_C#.csv";
+#region lancement services
 
-Dictionary<int,Person> persons = new Dictionary<int, Person>(); 
+// Charger la configuration manuellement
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile(@"C:\\Users\\julie\\RiderProjects\\CoursSupDeVinci\\CoursSupDeVinci\\appsettings.json", optional: false, reloadOnChange: true)
+    .Build();
+
+var host = Host.CreateDefaultBuilder(args)
+    .ConfigureServices(services =>
+    {
+        // NpgsqlConnection singleton avec ouverture automatique
+        services.AddSingleton(provider =>
+        {
+            var conn = new NpgsqlConnection(
+                configuration.GetConnectionString("DefaultConnection"));
+            conn.Open(); // ouverture unique
+            return conn;
+        });
+
+        // On enregistre notre service applicatif
+        services.AddTransient<DbConnection>();
+    })
+    .Build();
+
+using var scope = host.Services.CreateScope();
+DbConnection dbConnectionService = scope.ServiceProvider.GetRequiredService<DbConnection>();
+
+#endregion
+
+String path = configuration.GetRequiredSection("CSVFiles")["CoursSupDeVinci"];
+
+List<Person> persons = new List<Person>(); 
 
 var lignes = File.ReadAllLines(path);
 
@@ -23,8 +57,16 @@ for (int i = 1; i < lignes.Length; i++)
     
     person.AdressDetails = new Detail(details[0], int.Parse(details[1]), details[2]);
     
-    persons.Add(int.Parse(line.Split(',')[0]), person);
+    persons.Add(person);
 }
+
+Classe maClasse = new Classe();
+maClasse.Level = "B2";
+maClasse.Name = "B2 C#";
+maClasse.School = "SupDeVinci";
+maClasse.Persons = persons.ToList();
+
+await dbConnectionService.init(maClasse);
 
 #region renseigne à la main
 
@@ -98,6 +140,3 @@ for (int i = 1; i < lignes.Length; i++)
 // }
 
     #endregion
-
-DbConnection dbConnection = new DbConnection();
-dbConnection.init();
