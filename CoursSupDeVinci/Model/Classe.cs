@@ -1,10 +1,21 @@
-﻿namespace CoursSupDeVinci;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CoursSupDeVinci;
 
 public class Classe
 {
+    [Key]
+    public Guid Id {get;set;} = new Guid();
+    
+    [Required]
     private string name;
+    
+    [Required]
     private string level;
+    
+    [Required]
     private string school;
+    
     private List<Person> persons;
 
     public string Name

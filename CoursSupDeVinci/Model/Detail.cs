@@ -1,12 +1,21 @@
-﻿namespace CoursSupDeVinci;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CoursSupDeVinci;
 
 public class Detail
 {
+    [Key]
+    public Guid Id { get; set; } = new Guid();
+    
     private String street;
 
     private int zipCode;
     
     private String city;
+    
+    [Required]
+    //relation n..n vers Detail
+    public ICollection<Person> Persons { get; set; } = new List<Person>();
 
     public Detail(string street, int zipCode, string city)
     {

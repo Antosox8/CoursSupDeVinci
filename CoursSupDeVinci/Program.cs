@@ -1,7 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using CoursSupDeVinci;
+using CoursSupDeVinci.InterfaceRepository;
 using CoursSupDeVinci.Utils;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,24 +20,22 @@ var configuration = new ConfigurationBuilder()
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
-        // NpgsqlConnection singleton avec ouverture automatique
-        services.AddSingleton(provider =>
-        {
-            var conn = new NpgsqlConnection(
-                configuration.GetConnectionString("DefaultConnection"));
-            conn.Open(); // ouverture unique
-            return conn;
-        });
+        services.AddDbContext<SchoolDbContext>(options =>
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         // On enregistre notre service applicatif
         services.AddTransient<DbConnection>();
+        
+        services.AddTransient<IPersonRepository, PersonRepository>();
     })
     .Build();
 
 using var scope = host.Services.CreateScope();
-DbConnection dbConnectionService = scope.ServiceProvider.GetRequiredService<DbConnection>();
+IPersonRepository personRepository = scope.ServiceProvider.GetRequiredService<IPersonRepository>();
 
 #endregion
+
+#region  CSV
 
 String path = configuration.GetRequiredSection("CSVFiles")["CoursSupDeVinci"];
 
@@ -55,7 +55,7 @@ for (int i = 1; i < lignes.Length; i++)
     
     List<String> details = line.Split(',')[4].Split(';').ToList();
     
-    person.AdressDetails = new Detail(details[0], int.Parse(details[1]), details[2]);
+    person.Details.Add(new Detail(details[0], int.Parse(details[1]), details[2]));
     
     persons.Add(person);
 }
@@ -66,7 +66,16 @@ maClasse.Name = "B2 C#";
 maClasse.School = "SupDeVinci";
 maClasse.Persons = persons.ToList();
 
-await dbConnectionService.init(maClasse);
+#endregion
+
+//dbConnectionService.SaveFullClasse(maClasse);
+List<Person> personsDb = personRepository.GetAllEthan();
+
+foreach (var person in personsDb)
+{
+    Console.WriteLine("Il y a " + personsDb.Count + " personnes qui s'appelles "+person.Firstname + " et habite à "
+                      + person.Details.First().City);
+}
 
 #region renseigne à la main
 

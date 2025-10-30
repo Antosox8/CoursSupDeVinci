@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CoursSupDeVinci")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4c1f70ba87719ac54b64a7449d4a6b7366783a44")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12ce668641b6148e55db38b8c454f0ddba4c4f15")]
 [assembly: System.Reflection.AssemblyProductAttribute("CoursSupDeVinci")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CoursSupDeVinci")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
