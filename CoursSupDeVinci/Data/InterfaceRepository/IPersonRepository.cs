@@ -3,6 +3,6 @@
 public interface IPersonRepository
 {
     List<Person> GetAllPerson();
-    
-    List<Person> GetAllEthan();
+    List<Person> GetAllPersonsFromNantes();
+
 }

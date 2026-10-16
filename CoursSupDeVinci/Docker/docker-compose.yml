@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: cours-sup-devinci-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cours_sup_de_vinci
+      POSTGRES_USER: devinci
+      POSTGRES_PASSWORD: devinci_dev_password
+    ports:
+      - "4432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U devinci -d cours_sup_de_vinci"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

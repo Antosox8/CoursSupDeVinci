@@ -16,7 +16,7 @@ namespace CoursSupDeVinci.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.10")
+                .HasAnnotation("ProductVersion", "10.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -25,90 +25,110 @@ namespace CoursSupDeVinci.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<string>("Level")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("level");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("name");
 
                     b.Property<string>("School")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("school");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Classes");
+                    b.ToTable("classes");
                 });
 
             modelBuilder.Entity("CoursSupDeVinci.Detail", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("city");
 
                     b.Property<string>("Street")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("street");
 
-                    b.Property<int>("ZipCode")
-                        .HasColumnType("integer");
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("zipcode");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Details");
+                    b.ToTable("detail");
                 });
 
             modelBuilder.Entity("DetailPerson", b =>
                 {
                     b.Property<Guid>("DetailsId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id_detail");
 
                     b.Property<Guid>("PersonsId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id_person");
 
                     b.HasKey("DetailsId", "PersonsId");
 
                     b.HasIndex("PersonsId");
 
-                    b.ToTable("DetailPerson");
+                    b.ToTable("person_detail", (string)null);
                 });
 
             modelBuilder.Entity("Person", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<DateTime>("Birthdate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("birthdate");
 
                     b.Property<string>("Firstname")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("firstname");
 
                     b.Property<Guid>("IdClasse")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id_classe");
 
                     b.Property<string>("Lastname")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("lastname");
 
                     b.Property<int>("Size")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("size");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdClasse");
 
-                    b.ToTable("Persons");
+                    b.ToTable("person");
                 });
 
             modelBuilder.Entity("DetailPerson", b =>

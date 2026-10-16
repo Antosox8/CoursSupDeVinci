@@ -5,16 +5,17 @@ using CoursSupDeVinci.InterfaceRepository;
 using CoursSupDeVinci.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
+using Microsoft.Extensions.Hosting;
+
 
 #region lancement services
 
 // Charger la configuration manuellement
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile(@"C:\\Users\\julie\\RiderProjects\\CoursSupDeVinci\\CoursSupDeVinci\\appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile(@"/Users/antosox/Projects/CoursSupDeVinci/CoursSupDeVinci/appsettings.json",
+        optional: false, reloadOnChange: true)
     .Build();
 
 var host = Host.CreateDefaultBuilder(args)
@@ -25,13 +26,9 @@ var host = Host.CreateDefaultBuilder(args)
 
         // On enregistre notre service applicatif
         services.AddTransient<DbConnection>();
-        
         services.AddTransient<IPersonRepository, PersonRepository>();
     })
     .Build();
-
-using var scope = host.Services.CreateScope();
-IPersonRepository personRepository = scope.ServiceProvider.GetRequiredService<IPersonRepository>();
 
 #endregion
 
@@ -41,7 +38,7 @@ String path = configuration.GetRequiredSection("CSVFiles")["CoursSupDeVinci"];
 
 List<Person> persons = new List<Person>(); 
 
-var lignes = File.ReadAllLines(path);
+String[] lignes = File.ReadAllLines(path);
 
 for (int i = 1; i < lignes.Length; i++)
 {
@@ -55,7 +52,7 @@ for (int i = 1; i < lignes.Length; i++)
     
     List<String> details = line.Split(',')[4].Split(';').ToList();
     
-    person.Details.Add(new Detail(details[0], int.Parse(details[1]), details[2]));
+    person.Details.Add(new Detail(details[0], details[1], details[2]));
     
     persons.Add(person);
 }
@@ -66,16 +63,20 @@ maClasse.Name = "B2 C#";
 maClasse.School = "SupDeVinci";
 maClasse.Persons = persons.ToList();
 
+
 #endregion
 
-//dbConnectionService.SaveFullClasse(maClasse);
-List<Person> personsDb = personRepository.GetAllEthan();
+using var scope = host.Services.CreateScope();
+DbConnection dbConnection = scope.ServiceProvider.GetRequiredService<DbConnection>();
+IPersonRepository personRepository = scope.ServiceProvider.GetRequiredService<IPersonRepository>();
 
-foreach (var person in personsDb)
+//dbConnection.initDb(maClasse);
+var listeNantais = personRepository.GetAllPersonsFromNantes();
+foreach (var nantais in listeNantais)
 {
-    Console.WriteLine("Il y a " + personsDb.Count + " personnes qui s'appelles "+person.Firstname + " et habite à "
-                      + person.Details.First().City);
+    Console.WriteLine(nantais.Firstname);
 }
+
 
 #region renseigne à la main
 
@@ -111,24 +112,23 @@ foreach (var person in personsDb)
     #endregion
 
 #region exercice taille et linq
-// double tailleMoyenne = persons.Average(person => person.Value.Size);
-// double tailleMoyenneMetre = Math.Floor(tailleMoyenne) / 100;
+// double mediumSize = maClasse.Persons.Average(person => person.Size);
+// double mediumSizeMeter = Math.Floor(mediumSize) / 100;
 //
-// Dictionary<int, Person> tallerPersons = persons.Where(person => person.Value.Size > tailleMoyenne)
-//     .ToDictionary(person => person.Key, person => person.Value);
+// List<Person> tallerPersons = maClasse.Persons.Where(person => person.Size > mediumSize).ToList();
 //
 // Console.WriteLine($"Il y a {tallerPersons.Count.ToString()} personnes qui sont plus grandes que la moyenne " +
-//                   $"de la classe qui est de {tailleMoyenneMetre} mètre");
+//                   $"de la classe qui est de {mediumSizeMeter} mètre");
 #endregion
 
 #region boucle affiche toute la classe
 
-// foreach (KeyValuePair<int, Person> person in persons)
+// foreach (Person person in persons)
 // {
-// Console.WriteLine($"Bonjour {person.Value.Firstname} {person.Value.Lastname},");
-// Console.WriteLine($"tu as {person.Value.getYearsOld().ToString()} ans et tu habites au {person.Value.AdressDetails.Street}" +
-//                   $" {person.Value.AdressDetails.ZipCode.ToString()} {person.Value.AdressDetails.City}.");
-
+// Console.WriteLine($"Bonjour {person.Firstname} {person.Lastname},");
+// Console.WriteLine($"tu as {person.getYearsOld().ToString()} ans et tu habites au {person.Detail.Street}" +
+//                   $" {person.Detail.ZipCode.ToString()} {person.Detail.City}.");
+//
 // }
 
 #endregion

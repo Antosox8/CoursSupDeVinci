@@ -1,44 +1,45 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoursSupDeVinci;
 
+[Table("detail")]
 public class Detail
 {
     [Key]
-    public Guid Id { get; set; } = new Guid();
-    
-    private String street;
-
-    private int zipCode;
-    
-    private String city;
+    [Column("id")]
+    public Guid Id { get; set; }
     
     [Required]
     //relation n..n vers Detail
     public ICollection<Person> Persons { get; set; } = new List<Person>();
 
-    public Detail(string street, int zipCode, string city)
+    public Detail(string street, String zipCode, string city)
     {
-        this.street = street;
-        this.zipCode = zipCode;
-        this.city = city;
+        this.Street = street;
+        this.ZipCode = zipCode;
+        this.City = city;
     }
     
+    [Column("street")]
     public string Street
     {
-        get => street;
-        set => street = value ?? throw new ArgumentNullException(nameof(value));
+        get;
+        set;
     }
 
-    public int ZipCode
+    
+    [Column("zipcode")]
+    public String ZipCode
     {
-        get => zipCode;
-        set => zipCode = value;
+        get;
+        set;
     }
 
+    [Column("city")]
     public string City
     {
-        get => city;
-        set => city = value ?? throw new ArgumentNullException(nameof(value));
+        get;
+        set;
     }
 }

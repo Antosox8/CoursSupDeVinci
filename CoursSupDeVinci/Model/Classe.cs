@@ -1,44 +1,42 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoursSupDeVinci;
 
+[Table("classes")]
 public class Classe
 {
     [Key]
-    public Guid Id {get;set;} = new Guid();
-    
-    [Required]
-    private string name;
-    
-    [Required]
-    private string level;
-    
-    [Required]
-    private string school;
-    
-    private List<Person> persons;
+    [Column("id")]
+    public Guid Id {get;set;}
 
-    public string Name
+    [Required]
+    [Column("name")]
+    public String Name
     {
-        get => name;
-        set => name = value ?? throw new ArgumentNullException(nameof(value));
+        get;
+        set;
     }
 
-    public string Level
+    [Required]
+    [Column("level")]
+    public String Level
     {
-        get => level;
-        set => level = value ?? throw new ArgumentNullException(nameof(value));
+        get;
+        set;
     }
 
-    public string School
+    [Required]
+    [Column("school")]
+    public String School
     {
-        get => school;
-        set => school = value ?? throw new ArgumentNullException(nameof(value));
+        get;
+        set;
     }
 
     public List<Person> Persons
     {
-        get => persons;
-        set => persons = value ?? throw new ArgumentNullException(nameof(value));
+        get;
+        set;
     }
 }

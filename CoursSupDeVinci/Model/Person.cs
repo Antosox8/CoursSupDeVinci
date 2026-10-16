@@ -2,19 +2,12 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using CoursSupDeVinci;
 
+[Table("person")]
 public class Person
 {
     [Key]
-    public Guid Id {get;set;} = new Guid();
-    
-    [Required]
-    private String firstname;
-
-    [Required]
-    private String lastname;
-    
-    [Required]
-    private DateTime birthdate;
+    [Column("id")]
+    public Guid Id {get;set;}
     
     [Required]
     //relation n..n vers Detail
@@ -24,34 +17,42 @@ public class Person
     private int size;
 
     [ForeignKey("person_classe_fk")]
+    [Column("id_classe")]
     public Guid IdClasse {get; set;}
     
     public Classe Classe {get; set;}
 
     #region Accesseur
 
+    [Required]
+    [Column("firstname")]
     public string Firstname
     {
-        get => firstname;
-        set => firstname = value ?? throw new ArgumentNullException(nameof(value));
+        get;
+        set;
     }
 
+    [Required]
+    [Column("lastname")]
     public string Lastname
     {
-        get => lastname;
-        set => lastname = value ?? throw new ArgumentNullException(nameof(value));
+        get;
+        set;
     }
 
+    [Required]
+    [Column("birthdate")]
     public DateTime Birthdate
     {
-        get => birthdate;
-        set => birthdate = value;
+        get;
+        set;
     }
     
+    [Column("size")]
     public int Size
     {
-        get => size;
-        set => size = value;
+        get;
+        set;
     }
 
     #endregion
@@ -60,9 +61,9 @@ public class Person
     {
         DateTime today = DateTime.Today;
 
-        int years = today.Year - birthdate.Year;
+        int years = today.Year - Birthdate.Year;
 
-        if (today.Month < birthdate.Month || today.Month == birthdate.Month && today.Day < birthdate.Day)
+        if (today.Month < Birthdate.Month || today.Month == Birthdate.Month && today.Day < Birthdate.Day)
         {
             years--;
         }
